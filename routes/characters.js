@@ -5,7 +5,7 @@ const md5 = require("md5");
 const router = express.Router();
 
 router.get("/characters", async (req, res) => {
-  // destructuring
+  // destructuring req
   const page = req.query.page;
   const search = req.query.search;
 
