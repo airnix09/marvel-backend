@@ -64,7 +64,7 @@ router.get("/characters", async (req, res) => {
   }
 });
 
-router.get("/character/:id/comics", async (req, res) => {
+router.get("/characters/:id/comics", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
@@ -81,6 +81,44 @@ router.get("/character/:id/comics", async (req, res) => {
       "http://gateway.marvel.com/v1/public/characters/" +
       req.params.id +
       "/comics?ts=" +
+      ts +
+      "&apikey=" +
+      process.env.API_PUB_KEY +
+      "&hash=" +
+      hash;
+
+    console.log(url);
+
+    // récupérer la liste des personnages
+    const response = await axios.get(url);
+
+    // check du retour
+    console.log("API data response", response.data);
+
+    // retour à l'utilisateur
+    res.status(200).json(response.data.data);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+router.get("/characters/:id", async (req, res) => {
+  // get timestamp
+  const date = new Date();
+  const ts = date.getTime();
+  // ts = Math.floor(Date.now() / 1000);
+  // console.log("timestamp characters", ts);
+
+  // get hash
+  hash = md5(ts + process.env.API_PRIV_KEY + process.env.API_PUB_KEY);
+  // console.log("hash characters", hash);
+
+  try {
+    // création de l'url
+    const url =
+      "http://gateway.marvel.com/v1/public/characters/" +
+      req.params.id +
+      "?ts=" +
       ts +
       "&apikey=" +
       process.env.API_PUB_KEY +
