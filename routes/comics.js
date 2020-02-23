@@ -61,7 +61,7 @@ router.get("/comics", async (req, res) => {
   }
 });
 
-router.get("/comic/:id", async (req, res) => {
+router.get("/comics/:id", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
