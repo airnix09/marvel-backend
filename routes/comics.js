@@ -12,15 +12,13 @@ router.get("/comics", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
-  // ts = Math.floor(Date.now() / 1000);
-  // console.log("timestamp comics", ts);
 
   // get hash
   hash = md5(ts + process.env.API_PRIV_KEY + process.env.API_PUB_KEY);
-  // console.log("hash comics", hash);
+  console.log("hash comics", hash);
 
-  // variable globale
   const limit = 100;
+
   const urlbase = "http://gateway.marvel.com/v1/public/comics?ts=";
   let url =
     urlbase +
@@ -36,28 +34,31 @@ router.get("/comics", async (req, res) => {
   if (page) {
     const offset = limit * (page - 1);
 
-    // création de l'url
+    // add offset to the url if needed
     url = url + "&offset=" + offset;
 
     console.log(url);
   }
   if (search) {
-    // création de l'url
+    // add search to the url if needed
     url = url + "&titleStartsWith=" + search;
 
     console.log(url);
   }
   try {
-    // récupérer la liste des personnages
+    // get comics
     const response = await axios.get(url);
 
-    // check du retour
+    // check response
     console.log("API data response", response.data);
 
-    // retour à l'utilisateur
+    // respond to API client
     res.status(200).json(response.data.data);
   } catch (error) {
+    // check error
     console.log(error.message);
+    // respond to API client
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -65,15 +66,12 @@ router.get("/comics/:id", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
-  // ts = Math.floor(Date.now() / 1000);
-  // console.log("timestamp characters", ts);
 
   // get hash
   hash = md5(ts + process.env.API_PRIV_KEY + process.env.API_PUB_KEY);
-  // console.log("hash characters", hash);
 
   try {
-    // création de l'url
+    // build url
     const url =
       "http://gateway.marvel.com/v1/public/comics/" +
       req.params.id +
@@ -86,16 +84,19 @@ router.get("/comics/:id", async (req, res) => {
 
     console.log(url);
 
-    // récupérer la liste des personnages
+    // get comic by id
     const response = await axios.get(url);
 
-    // check du retour
+    // check response
     console.log("API data response", response.data);
 
-    // retour à l'utilisateur
+    // respond to API client
     res.status(200).json(response.data.data);
   } catch (error) {
+    // check error
     console.log(error.message);
+    // respond to API client
+    res.status(400).json({ message: error.message });
   }
 });
 

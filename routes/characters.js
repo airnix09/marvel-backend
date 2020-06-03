@@ -12,17 +12,12 @@ router.get("/characters", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
-  // ts = Math.floor(Date.now() / 1000);
-  console.log("timestamp characters", ts);
 
   // get hash
   hash = md5(ts + process.env.API_PRIV_KEY + process.env.API_PUB_KEY);
-  // console.log("hash characters", hash);
 
-  // définition de la page à appeler (selon la demande du frontend)
-
-  // variable globale
   const limit = 100;
+
   const urlbase = "http://gateway.marvel.com/v1/public/characters?ts=";
   let url =
     urlbase +
@@ -38,29 +33,31 @@ router.get("/characters", async (req, res) => {
   if (page) {
     const offset = limit * (page - 1);
 
-    // création de l'url
+    // add offset to the url if needed
     url = url + "&offset=" + offset;
-
-    console.log(url);
   }
-  if (search) {
-    // création de l'url
-    url = url + "&nameStartsWith=" + search;
 
-    console.log(url);
+  if (search) {
+    // add search to the url if needed
+    url = url + "&nameStartsWith=" + search;
   }
 
   try {
-    // récupérer la liste des personnages
+    // check the url used
+    console.log(url);
+
+    // get characters
     const response = await axios.get(url);
 
-    // check du retour
+    // check response
     console.log("API data response", response.data);
 
-    // retour à l'utilisateur
+    // respond to API client
     res.status(200).json(response.data.data);
   } catch (error) {
     console.log(error.message);
+    // respond to API client
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -68,15 +65,12 @@ router.get("/characters/:id/comics", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
-  // ts = Math.floor(Date.now() / 1000);
-  // console.log("timestamp characters", ts);
 
   // get hash
   hash = md5(ts + process.env.API_PRIV_KEY + process.env.API_PUB_KEY);
-  // console.log("hash characters", hash);
 
   try {
-    // création de l'url
+    // build url
     const url =
       "http://gateway.marvel.com/v1/public/characters/" +
       req.params.id +
@@ -87,18 +81,21 @@ router.get("/characters/:id/comics", async (req, res) => {
       "&hash=" +
       hash;
 
+    // check the url used
     console.log(url);
 
-    // récupérer la liste des personnages
+    // get associated comics
     const response = await axios.get(url);
 
-    // check du retour
+    // check response
     console.log("API data response", response.data);
 
-    // retour à l'utilisateur
+    // respond to API client
     res.status(200).json(response.data.data);
   } catch (error) {
     console.log(error.message);
+    // respond to API client
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -106,15 +103,12 @@ router.get("/characters/:id", async (req, res) => {
   // get timestamp
   const date = new Date();
   const ts = date.getTime();
-  // ts = Math.floor(Date.now() / 1000);
-  // console.log("timestamp characters", ts);
 
   // get hash
   hash = md5(ts + process.env.API_PRIV_KEY + process.env.API_PUB_KEY);
-  // console.log("hash characters", hash);
 
   try {
-    // création de l'url
+    // build url
     const url =
       "http://gateway.marvel.com/v1/public/characters/" +
       req.params.id +
@@ -125,18 +119,21 @@ router.get("/characters/:id", async (req, res) => {
       "&hash=" +
       hash;
 
+    // check the url used
     console.log(url);
 
-    // récupérer la liste des personnages
+    // get the character
     const response = await axios.get(url);
 
-    // check du retour
+    // check response
     console.log("API data response", response.data);
 
-    // retour à l'utilisateur
+    // respond to API client
     res.status(200).json(response.data.data);
   } catch (error) {
     console.log(error.message);
+    // respond to API client
+    res.status(400).json({ message: error.message });
   }
 });
 
